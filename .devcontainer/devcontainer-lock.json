@@ -1,0 +1,24 @@
+{
+  "features": {
+    "ghcr.io/devcontainers/features/common-utils:2": {
+      "version": "2.5.9",
+      "resolved": "ghcr.io/devcontainers/features/common-utils@sha256:cb0c4d3c276f157eed17935747e364178d75fee17f55c4e129966f64633deb3a",
+      "integrity": "sha256:cb0c4d3c276f157eed17935747e364178d75fee17f55c4e129966f64633deb3a"
+    },
+    "ghcr.io/devcontainers/features/python": {
+      "version": "1.8.0",
+      "resolved": "ghcr.io/devcontainers/features/python@sha256:fbcad6955caeecc5ad3f7886baf652e25cba5225a6c4c2287c536de2e5607511",
+      "integrity": "sha256:fbcad6955caeecc5ad3f7886baf652e25cba5225a6c4c2287c536de2e5607511"
+    },
+    "ghcr.io/devcontainers/features/rust": {
+      "version": "1.5.1",
+      "resolved": "ghcr.io/devcontainers/features/rust@sha256:f7afd923fd283db88ca961342ae65ea63a8c95bcf86e42c4c363f43bc4ba26a5",
+      "integrity": "sha256:f7afd923fd283db88ca961342ae65ea63a8c95bcf86e42c4c363f43bc4ba26a5"
+    },
+    "ghcr.io/marcosbolanos/devcontainer-features/neovim-prebuilt:1": {
+      "version": "1.0.0",
+      "resolved": "ghcr.io/marcosbolanos/devcontainer-features/neovim-prebuilt@sha256:bd1f7a64fc308f256a01c61946db094e0c92c4fd9d32f42b7ea8b661788d879d",
+      "integrity": "sha256:bd1f7a64fc308f256a01c61946db094e0c92c4fd9d32f42b7ea8b661788d879d"
+    }
+  }
+}

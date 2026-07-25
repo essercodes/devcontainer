@@ -2,5 +2,12 @@
     "name": "Claude Code",
     "id": "claudecode",
     "version": "0.1.0",
-    "description": "A feature to install Claude Code"
+    "description": "A feature to install Claude Code",
+    "options": {
+        "username": {
+            "type": "string",
+            "default": "automatic",
+            "description": "User to install for. 'automatic' uses the dev container's remoteUser."
+        }
+    }
 }

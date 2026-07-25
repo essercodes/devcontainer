@@ -11,6 +11,13 @@
         "./features/neovim": {}
     },
     "description": "A feature to install neovim configuration",
+    "options": {
+        "username": {
+            "type": "string",
+            "default": "automatic",
+            "description": "User to install the config for. 'automatic' uses the dev container's remoteUser."
+        }
+    },
     "installsAfter": [
         "ghcr.io/devcontainers/features/common-utils:2",
         "ghcr.io/devcontainers/features/rust",

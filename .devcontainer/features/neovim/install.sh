@@ -27,38 +27,49 @@ pm_install() {
   echo "Installing:${pkgs}"
   if command -v apt-get >/dev/null 2>&1; then
     export DEBIAN_FRONTEND=noninteractive
+
+    rm -rf /var/lib/apt/lists/*
     apt-get update -y
+
     # Word splitting on $pkgs is intentional here and below.
     # shellcheck disable=SC2086
     apt-get install -y $pkgs
     rm -rf /var/lib/apt/lists/*
+
   elif command -v apk >/dev/null 2>&1; then
     # shellcheck disable=SC2086
     apk add --no-cache $pkgs
+
   elif command -v dnf >/dev/null 2>&1; then
     # shellcheck disable=SC2086
     dnf install -y $pkgs
     dnf clean all
+
   elif command -v microdnf >/dev/null 2>&1; then
     # shellcheck disable=SC2086
     microdnf install -y --nodocs $pkgs
     microdnf clean all
+
   elif command -v yum >/dev/null 2>&1; then
     # shellcheck disable=SC2086
     yum install -y $pkgs
     yum clean all
+
   elif command -v zypper >/dev/null 2>&1; then
     # shellcheck disable=SC2086
     zypper --non-interactive install $pkgs
     zypper clean --all
+
   elif command -v pacman >/dev/null 2>&1; then
     # shellcheck disable=SC2086
     pacman -Sy --noconfirm --needed $pkgs
     rm -rf /var/cache/pacman/pkg/*
+
   else
     echo "Error: no supported package manager found." >&2
     echo "Install these manually and re-run:${pkgs}" >&2
     exit 1
+
   fi
 }
 
@@ -78,9 +89,11 @@ fi
 ASSET="nvim-linux-${NVIM_ARCH}.tar.gz"
 if [ "$VERSION" = "latest" ]; then
   BASE_URL="https://github.com/neovim/neovim/releases/latest/download"
+
 else
   # Accept both "0.11.0" and "v0.11.0".
   BASE_URL="https://github.com/neovim/neovim/releases/download/v${VERSION#v}"
+
 fi
 
 # Removed on exit so the tarball does not end up baked into the image layer.

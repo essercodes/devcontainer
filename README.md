@@ -6,7 +6,7 @@
 	"features": {
         "ghcr.io/essercodes/devcontainer/neovim-config": {},
         "ghcr.io/essercodes/devcontainer/claudecode": {}
-    }
+    },
 	"remoteUser": "ubuntu"
 }
 ```

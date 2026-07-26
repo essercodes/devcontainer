@@ -3,11 +3,17 @@
     "id": "opencode",
     "version": "0.1.3",
     "description": "A feature to install Opencode",
+    "dependsOn": {
+        "ghcr.io/devcontainers/features/common-utils:2": {}
+    },
     "options": {
         "username": {
             "type": "string",
             "default": "automatic",
-            "description": "User to install for. 'automatic' uses the dev container's remoteUser."
+            "description": "Installs for this user, 'automatic' uses the dev container's remoteUser."
         }
-    }
+    },
+    "installsAfter": [
+        "ghcr.io/devcontainers/features/common-utils:2"
+    ]
 }

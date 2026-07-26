@@ -7,10 +7,8 @@
         "ghcr.io/devcontainers/features/rust": {},
         "ghcr.io/devcontainers/features/python": {},
         "ghcr.io/devcontainers/features/node": {},
-        //"ghcr.io/essercodes/devcontainers/opencode": {},
-        //"ghcr.io/essercodes/devcontainers/neovim": {}
-        "./features/opencode": {},
-        "./features/neovim": {}
+        "ghcr.io/essercodes/devcontainer/opencode": {},
+        "ghcr.io/essercodes/devcontainer/neovim": {}
     },
     "description": "A feature to install neovim configuration",
     "options": {
@@ -23,9 +21,9 @@
     "installsAfter": [
         "ghcr.io/devcontainers/features/common-utils:2",
         "ghcr.io/devcontainers/features/rust",
-        //"ghcr.io/essercodes/devcontainers/opencode",
-        //"ghcr.io/essercodes/devcontainers/neovim"
-        "./features/opencode",
-        "./features/neovim"
+        "ghcr.io/devcontainers/features/python",
+        "ghcr.io/devcontainers/features/node",
+        "ghcr.io/essercodes/devcontainer/opencode",
+        "ghcr.io/essercodes/devcontainer/neovim"
     ]
 }

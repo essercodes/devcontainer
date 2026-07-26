@@ -1,0 +1,28 @@
+{
+    "id": "neovim-basic",
+    "version": "1.0.0",
+    "name": "Neovim Basic",
+    "description": "Template for Basic Dev Environment with Neovim installed",
+    "documentationURL": "https://github.com/essercodes/devcontainers/tree/main/templates/neovim-basic",
+    "licenseURL": "https://github.com/essercodes/devcontainers/tree/main/LICENSE",
+    "options": {
+        "imageVariant": {
+            "type": "string",
+            "description": "Ubuntu version (use latest):",
+            "default": "latest"
+        },
+        "remoteUser": {
+            "type": "string",
+            "description": "The devcontainer remote user",
+            "default": "ubuntu"
+        },
+        "neovimConfigUrl": {
+            "type": "string",
+            "description": "Select a pre-made greeting, or enter your own",
+            "default": "https://github.com/essercodes/neovim-config"
+        }
+    },
+    "platforms": [
+        "Any"
+    ]
+}

@@ -48,10 +48,8 @@ fi
 
 NVIM_CONFIG_DIR="${USER_HOME}/.config/nvim"
 
-# -H sets HOME to the target user's home. Without it sudo leaves HOME pointing
-# at /root, and Lazy/Mason would install everything into /root/.local/share.
 as_user() {
-  sudo -u "$USERNAME" -H "$@"
+  sudo -u "$USERNAME" -H env "PATH=$PATH" "$@"
 }
 
 echo "## Install Treesitter dependencies ##"
@@ -73,14 +71,10 @@ echo "## Clone config ##"
 as_user mkdir -p "${USER_HOME}/.config"
 as_user git clone --depth 1 "$NVIM_CONFIG_URL" "$NVIM_CONFIG_DIR"
 
-echo "## Install Neovim plugins and tools ##"
-as_user nvim --headless \
-    "+Lazy! sync" \
-    +qa
+echo "## Install Neovim plugins ##"
+as_user nvim --headless "+Lazy! sync" +qa
 
-as_user nvim \
-    -c 'autocmd User MasonToolsUpdateCompleted quitall' \
-    -c 'MasonToolsInstall' \
-    +qa
+echo "## Install LSP Servers + Tools ##"
+as_user nvim --headless "+Lazy! load mason.nvim" "+MasonInstallAll" +qa
 
 echo "Done. Config installed to ${NVIM_CONFIG_DIR} for user ${USERNAME}."

@@ -1,12 +1,14 @@
 {
     "all_features": {
-        "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+        "image": "ubuntu",
         "features": {
+            "neovim-config": {},
             "neovim": {},
             "fzf": {},
             "tmux": {},
             "opencode": {},
             "claudecode": {}
-        }
+        },
+        "remoteUser": "ubuntu"
     }
 }

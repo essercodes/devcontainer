@@ -1,8 +1,8 @@
 {
-    "name": "Claude Code",
-    "id": "claudecode",
+    "name": "tmux",
+    "id": "tmux",
     "version": "0.1.0",
-    "description": "A feature to install Claude Code",
+    "description": "A feature to install tmux with the status bar disabled",
     "dependsOn": {
         "ghcr.io/devcontainers/features/common-utils:2": {}
     },

@@ -11,7 +11,7 @@ if [ "$(id -u)" -ne 0 ]; then
 fi
 
 if [ -n "${_REMOTE_USER_HOME}" ]; then
-    USER_HOME=homedir=$( getent passwd "${_REMOTE_USER}" | cut -d: -f6 )
+    USER_HOME=$( getent passwd "${_REMOTE_USER}" | cut -d: -f6 )
 else
     USER_HOME=${_REMOTE_USER_HOME}
 fi

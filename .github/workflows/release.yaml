@@ -64,7 +64,6 @@ jobs:
       - name: "Publish Features"
         uses: devcontainers/action@v1
         with:
-          generate-docs: "true"
           publish-features: "true"
           base-path-to-features: "./features/src"
         env:
@@ -83,13 +82,12 @@ jobs:
       - name: "Publish Templates"
         uses: devcontainers/action@v1
         with:
-          generate-docs: "true"
           publish-templates: "true"
           base-path-to-templates: "./templates/src"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  release-features:
+  documentation:
     needs: [release-features, release-templates]
     if: ${{ github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
@@ -99,6 +97,15 @@ jobs:
       pull-requests: write
     steps:
       - uses: actions/checkout@v4
+
+      - name: "Generate Documentation"
+        uses: devcontainers/action@v1
+        with:
+          generate-docs: "true"
+          base-path-to-features: "./features/src"
+          base-path-to-templates: "./templates/src"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create PR for Documentation
         id: push_image_info

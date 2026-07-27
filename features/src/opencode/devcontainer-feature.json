@@ -1,7 +1,7 @@
 {
     "name": "Opencode",
     "id": "opencode",
-    "version": "0.1.3",
+    "version": "0.1.4",
     "description": "A feature to install Opencode",
     "dependsOn": {
         "ghcr.io/devcontainers/features/common-utils:2": {}

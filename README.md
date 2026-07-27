@@ -9,8 +9,16 @@ devcontainer features test --skip-scenarios -p ./features -f <id> -i ubuntu -u u
 devcontainer features test --skip-scenarios -p ./features -f tmux -i ubuntu -u ubuntu
 ```
 
-## Connect
-Connect (or reconnect) to the terminal session when using the neovim-basic template.
+## neovim-basic Template
+
+```bash
+devcontainer templates apply --workspace-folder . \
+    --template-id ghcr.io/essercodes/devcontainer/neovim-basic:latest
+    
+```
+
+### Connecting
+Connect (or re-connect) to the session.
 ```bash
 devcontainer exec --workspace-folder . -- tmux new -A -D -s main
 ```
@@ -19,6 +27,6 @@ devcontainer exec --workspace-folder . -- tmux new -A -D -s main
 dcx() { devcontainer exec --workspace-folder "${1:-.}" -- tmux new -A -D -s "${TMUX_SESSION:-main}"; }
 ```
 
-## Detach
+### Detach from session
 If tmux is running on the host:     <C-b><C-b>d
 If tmux is running on the NOT host: <C-b>d

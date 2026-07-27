@@ -3,9 +3,11 @@
     "id": "neovim",
     "version": "0.1.0",
     "description": "A feature to install neovim from github release binaries",
-    "version": {
-        "type": "string",
-        "default": "latest",
-        "description": "Version of Neovim to install."
+    "options": {
+        "version": {
+            "type": "string",
+            "default": "latest",
+            "description": "Version to install."
+        }
     }
 }

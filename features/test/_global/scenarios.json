@@ -1,0 +1,12 @@
+{
+    "all_features": {
+        "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+        "features": {
+            "neovim": {},
+            "fzf": {},
+            "tmux": {},
+            "opencode": {},
+            "claudecode": {}
+        }
+    }
+}

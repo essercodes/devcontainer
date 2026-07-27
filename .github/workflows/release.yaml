@@ -1,12 +1,55 @@
 name: "Release dev container features"
 
 on:
+  workflow_dispatch:
+  pull_request:
   push:
     branches:
       - 'main'
 
 jobs:
-  deploy:
+  test-individual:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+          - neovim-config
+          - claudecode
+          - fzf
+          - neovim
+          - opencode
+          - tmux
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: "Install latest devcontainer CLI"
+        run: npm install -g @devcontainers/cli
+
+      - name: "Test '${{ matrix.features }}'"
+        run: |
+          devcontainer features test \
+            --skip-scenarios \
+            --project-folder ./features \
+            --features ${{ matrix.features }} \
+            --base-image mcr.microsoft.com/devcontainers/base:ubuntu \
+            --remote-user 'ubuntu'
+
+  test-global-scenarios:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: "Install latest devcontainer CLI"
+        run: npm install -g @devcontainers/cli
+
+      - name: "Test all features installed together"
+        run: |
+          devcontainer features test \
+            --global-scenarios-only \
+            --project-folder ./features \
+            --remote-user 'ubuntu'
+  release:
+    needs: [test-individual, test-global-scenarios]
     if: ${{ github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
     permissions:

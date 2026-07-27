@@ -8,5 +8,12 @@
     },
     "installsAfter": [
         "ghcr.io/devcontainers/features/common-utils:2"
-    ]
+    ],
+    "options": {
+        "version": {
+            "type": "string",
+            "default": "latest",
+            "description": "Version to install."
+        }
+    }
 }

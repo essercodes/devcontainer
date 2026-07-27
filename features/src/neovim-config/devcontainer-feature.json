@@ -1,7 +1,7 @@
 {
     "name": "Neovim Config",
     "id": "neovim-config",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "dependsOn": {
         "ghcr.io/devcontainers/features/common-utils:2": {},
         "ghcr.io/devcontainers/features/rust": {},

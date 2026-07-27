@@ -1,11 +1,8 @@
 {
     "name": "Claude Code",
     "id": "claudecode",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "description": "A feature to install Claude Code",
-    "dependsOn": {
-        "ghcr.io/devcontainers/features/common-utils:2": {}
-    },
     "installsAfter": [
         "ghcr.io/devcontainers/features/common-utils:2"
     ]

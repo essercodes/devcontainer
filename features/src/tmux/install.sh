@@ -8,90 +8,69 @@ if [ "$(id -u)" -ne 0 ]; then
   exit 1
 fi
 
-PM=""
-for candidate in apt-get apk dnf microdnf yum zypper pacman; do
-  if command -v "$candidate" >/dev/null 2>&1; then
-    PM="$candidate"
-    break
-  fi
-done
-
 pm_install() {
   pkgs="$1"
   echo "Installing:${pkgs}"
+  if command -v apt-get >/dev/null 2>&1; then
+    export DEBIAN_FRONTEND=noninteractive
 
-  case "$PM" in
-    apt-get)
-      export DEBIAN_FRONTEND=noninteractive
+    rm -rf /var/lib/apt/lists/*
+    apt-get update -y
 
-      rm -rf /var/lib/apt/lists/*
-      apt-get update -y
+    # Word splitting on $pkgs is intentional here and below.
+    # shellcheck disable=SC2086
+    apt-get install -y $pkgs
+    rm -rf /var/lib/apt/lists/*
 
-      # shellcheck disable=SC2086
-      apt-get install -y $pkgs
-      rm -rf /var/lib/apt/lists/*
-      ;;
+  elif command -v apk >/dev/null 2>&1; then
+    # shellcheck disable=SC2086
+    apk add --no-cache $pkgs
 
-    apk)
-      # shellcheck disable=SC2086
-      apk add --no-cache $pkgs
-      ;;
+  elif command -v dnf >/dev/null 2>&1; then
+    # shellcheck disable=SC2086
+    dnf install -y $pkgs
+    dnf clean all
 
-    dnf)
-      # shellcheck disable=SC2086
-      dnf install -y $pkgs
-      dnf clean all
-      ;;
+  elif command -v microdnf >/dev/null 2>&1; then
+    # shellcheck disable=SC2086
+    microdnf install -y --nodocs $pkgs
+    microdnf clean all
 
-    microdnf)
-      # shellcheck disable=SC2086
-      microdnf install -y --nodocs $pkgs
-      microdnf clean all
-      ;;
+  elif command -v yum >/dev/null 2>&1; then
+    # shellcheck disable=SC2086
+    yum install -y $pkgs
+    yum clean all
 
-    yum)
-      # shellcheck disable=SC2086
-      yum install -y $pkgs
-      yum clean all
-      ;;
+  elif command -v zypper >/dev/null 2>&1; then
+    # shellcheck disable=SC2086
+    zypper --non-interactive install $pkgs
+    zypper clean --all
 
-    zypper)
-      # shellcheck disable=SC2086
-      zypper --non-interactive install $pkgs
-      zypper clean --all
-      ;;
+  elif command -v pacman >/dev/null 2>&1; then
+    # shellcheck disable=SC2086
+    pacman -Sy --noconfirm --needed $pkgs
+    rm -rf /var/cache/pacman/pkg/*
 
-    pacman)
-      # shellcheck disable=SC2086
-      pacman -Sy --noconfirm --needed $pkgs
-      rm -rf /var/cache/pacman/pkg/*
-      ;;
+  else
+    echo "Error: no supported package manager found." >&2
+    echo "Install these manually and re-run:${pkgs}" >&2
+    exit 1
 
-    *)
-      echo "Error: no supported package manager found." >&2
-      echo "Install these manually and re-run:${pkgs}" >&2
-      exit 1
-      ;;
-  esac
+  fi
 }
 
-# Slim base images often carry only the handful of terminfo entries in the
-# ncurses base package, which does not include .  Best effort: not every distro splits terminfo out this way.
-terminfo_package() {
-  case "$PM" in
-    apt-get)              echo "ncurses-term" ;;
-    apk)                  echo "ncurses-terminfo" ;;
-    dnf | microdnf | yum) echo "ncurses-term" ;;
-    zypper)               echo "terminfo-base" ;;
-    *)                    echo "" ;;
-  esac
-}
-
-if command -v tmux >/dev/null 2>&1; then
-  echo "tmux already present: $(tmux -V)"
-else
-  pm_install " tmux"
+# Only ask for what is actually missing.
+PKGS=""
+command -v tmux >/dev/null 2>&1 || PKGS="${PKGS} tmux"
+if [ ! -e /etc/ssl/certs/ca-certificates.crt ] &&
+  [ ! -e /etc/pki/tls/certs/ca-bundle.crt ]; then
+  # Installing curl normally drags in a CA bundle as a dependency, but if curl
+  # is ALREADY present and the bundle is not, nothing above adds a package and
+  # the download dies on certificate verification. This covers that case.
+  PKGS="${PKGS} ca-certificates"
 fi
+[ -z "$PKGS" ] || pm_install "$PKGS"
+
 
 # Without tmux-256color tmux starts but reports the terminal as unsuitable, so 
 # the extended set is pulled in alongside.

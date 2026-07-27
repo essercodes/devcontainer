@@ -1,4 +1,4 @@
-name: "Release dev container features"
+name: "Release, Test, And Document"
 
 on:
   pull_request:
@@ -49,7 +49,8 @@ jobs:
             --project-folder ./features \
             --base-image ubuntu:latest \
             --remote-user 'ubuntu'
-  release:
+          
+  release-features:
     needs: [test-individual, test-global-scenarios]
     if: ${{ github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
@@ -63,18 +64,41 @@ jobs:
       - name: "Publish Features"
         uses: devcontainers/action@v1
         with:
+          generate-docs: "true"
           publish-features: "true"
           base-path-to-features: "./features/src"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+  release-templates:
+    if: ${{ github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+
       - name: "Publish Templates"
         uses: devcontainers/action@v1
         with:
+          generate-docs: "true"
           publish-templates: "true"
-          base-path-to-templates: "./templates"
+          base-path-to-templates: "./templates/src"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  release-features:
+    needs: [release-features, release-templates]
+    if: ${{ github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
 
       - name: Create PR for Documentation
         id: push_image_info

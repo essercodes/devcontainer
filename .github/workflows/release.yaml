@@ -31,7 +31,7 @@ jobs:
             --skip-scenarios \
             --project-folder ./features \
             --features ${{ matrix.features }} \
-            --base-image mcr.microsoft.com/devcontainers/base:ubuntu \
+            --base-image ubuntu:latest \
             --remote-user 'ubuntu'
 
   test-global-scenarios:
@@ -47,6 +47,7 @@ jobs:
           devcontainer features test \
             --global-scenarios-only \
             --project-folder ./features \
+            --base-image ubuntu:latest \
             --remote-user 'ubuntu'
   release:
     needs: [test-individual, test-global-scenarios]

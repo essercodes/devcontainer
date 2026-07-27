@@ -68,8 +68,13 @@ pm_install() {
 # Only ask for what is actually missing.
 PKGS=""
 command -v sudo >/dev/null 2>&1 || PKGS="${PKGS} sudo"
+command -v tar >/dev/null 2>&1 || PKGS="${PKGS} tar"
 command -v clang >/dev/null 2>&1 || PKGS="${PKGS} clang"
 command -v git >/dev/null 2>&1 || PKGS="${PKGS} git"
+command -v upzip >/dev/null 2>&1 || PKGS="${PKGS} unzip"
+command -v gzip >/dev/null 2>&1 || PKGS="${PKGS} gzip"
+command -v curl >/dev/null 2>&1 || PKGS="${PKGS} curl"
+command -v wget >/dev/null 2>&1 || PKGS="${PKGS} wget"
 if [ ! -e /etc/ssl/certs/ca-certificates.crt ] &&
     [ ! -e /etc/pki/tls/certs/ca-bundle.crt ]; then
 # Installing curl normally drags in a CA bundle as a dependency, but if curl

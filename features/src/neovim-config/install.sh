@@ -10,8 +10,18 @@ if [ "$(id -u)" -ne 0 ]; then
     exit 1
 fi
 
-NVIM_CONFIG_DIR="${_REMOTE_USER_HOME}/.config/nvim"
+if [ -n "${_REMOTE_USER_HOME}" ]; then
+    USER_HOME=homedir=$( getent passwd "${_REMOTE_USER}" | cut -d: -f6 )
+else
+    USER_HOME=${_REMOTE_USER_HOME}
+fi
 
+if [ ! -d "${USER_HOME}" ]; then
+    echo "ERROR: remoteUser (${_REMOTE_USER}) home directory (${USER_HOME}) does not exist." >&2
+    exit 1
+fi
+
+NVIM_CONFIG_DIR="${USER_HOME}/.config/nvim"
 
 echo "## Install Treesitter dependencies ##"
 pm_install() {
@@ -82,7 +92,7 @@ if [ ! -e /etc/ssl/certs/ca-certificates.crt ] &&
 # the download dies on certificate verification. This covers that case.
 PKGS="${PKGS} ca-certificates"
 fi
-[ -z "$PKGS" ] || pm_install "$PKGS"
+[ -z "${PKGS}" ] || pm_install "${PKGS}"
 
 if ! command -v cargo >/dev/null 2>&1; then
     echo "Error: cargo not found. Add a Rust Feature to this Feature's" >&2
@@ -94,18 +104,12 @@ echo "## Install tree-sitter CLI ##"
 cargo install --locked --root /usr/local tree-sitter-cli
 
 as_user() {
-    sudo -u "$_REMOTE_USER" -H env "PATH=$PATH" "$@"
+    sudo -u "${_REMOTE_USER}" -H env "PATH=${PATH}" "$@"
 }
 
-if [ ! -d "$_REMOTE_USER_HOME" ]; then
-    echo "Error remoteUser ($_REMOTE_USER) home directory ($_REMOTE_USER_HOME)" >&2
-    echo "does not exist." >&2
-    exit 1
-fi
-
 echo "## Clone config ##"
-as_user mkdir -p "${_REMOTE_USER_HOME}/.config"
-as_user git clone --depth 1 "$NVIM_CONFIG_URL" "$NVIM_CONFIG_DIR"
+as_user mkdir -p "${USER_HOME}/.config"
+as_user git clone --depth 1 "${NVIM_CONFIG_URL}" "${NVIM_CONFIG_DIR}"
 
 echo "## Install Neovim plugins ##"
 as_user nvim --headless "+Lazy! sync" +qa

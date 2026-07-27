@@ -13,7 +13,7 @@ jobs:
       fail-fast: false
       matrix:
         features:
-          - neovim-config
+          # - neovim-config
           - claudecode
           - fzf
           - neovim

@@ -98,11 +98,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: "Generate Documentation"
+      - name: "Generate Feature Documentation"
         uses: devcontainers/action@v1
         with:
           generate-docs: "true"
           base-path-to-features: "./features/src"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: "Generate Template Documentation"
+        uses: devcontainers/action@v1
+        with:
+          generate-docs: "true"
           base-path-to-templates: "./templates/src"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,9 +1,8 @@
 {
     "name": "Neovim Config",
     "id": "neovim-config",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "dependsOn": {
-        "ghcr.io/devcontainers/features/common-utils:2": {},
         "ghcr.io/devcontainers/features/rust": {},
         "ghcr.io/devcontainers/features/python": {},
         "ghcr.io/devcontainers/features/node": {},
@@ -19,7 +18,6 @@
         }
     },
     "installsAfter": [
-        "ghcr.io/devcontainers/features/common-utils:2",
         "ghcr.io/devcontainers/features/rust",
         "ghcr.io/devcontainers/features/python",
         "ghcr.io/devcontainers/features/node",

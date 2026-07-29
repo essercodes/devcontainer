@@ -19,6 +19,7 @@ jobs:
           - neovim
           - opencode
           - tmux
+          - op
     steps:
       - uses: actions/checkout@v4
 

@@ -78,7 +78,7 @@ as_user() {
 
 as_user bash -c 'curl -fsSL https://claude.ai/install.sh | bash'
 
-cat > ~/.claude.json <<'EOF'
+as_user cat > ~/.claude.json <<'EOF'
 {"hasCompletedOnboarding": true, "theme": "dark"}
 EOF
 

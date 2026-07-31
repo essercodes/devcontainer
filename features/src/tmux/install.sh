@@ -95,7 +95,6 @@ CONF_MARKER="# tmux defaults (devcontainer feature)"
 if ! grep -qF "$CONF_MARKER" "$TMUX_CONF" 2>/dev/null; then
     cat << EOF >> "$TMUX_CONF"
 $CONF_MARKER
-set -g status off
 set -g mouse on
 set-window-option -g mode-keys vi
 bind-key -T copy-mode-vi v send -X begin-selection

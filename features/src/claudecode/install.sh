@@ -7,6 +7,17 @@ if [ "$(id -u)" -ne 0 ]; then
     exit 1
 fi
 
+if [ -n "${_REMOTE_USER_HOME}" ]; then
+    USER_HOME=$( getent passwd "${_REMOTE_USER}" | cut -d: -f6 )
+else
+    USER_HOME=${_REMOTE_USER_HOME}
+fi
+
+if [ ! -d "${USER_HOME}" ]; then
+    echo "ERROR: remoteUser (${_REMOTE_USER}) home directory (${USER_HOME}) does not exist." >&2
+    exit 1
+fi
+
 pm_install() {
     pkgs="$1"
     echo "Installing:${pkgs}"
@@ -78,7 +89,7 @@ as_user() {
 
 as_user bash -c 'curl -fsSL https://claude.ai/install.sh | bash'
 
-as_user cat > ~/.claude.json <<'EOF'
+as_user cat > "${USER_HOME}/.claude.json" <<'EOF'
 {"hasCompletedOnboarding": true, "theme": "dark"}
 EOF
 

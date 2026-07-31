@@ -4,9 +4,12 @@
 # All feature tests
 devcontainer features test --skip-scenarios -p ./features -i ubuntu -u ubuntu
 
-# by id
-devcontainer features test --skip-scenarios -p ./features -f <id> -i ubuntu -u ubuntu
-devcontainer features test --skip-scenarios -p ./features -f tmux -i ubuntu -u ubuntu
+# Global only
+devcontainer features test --global-scenarios-only -p ./features -i ubuntu -u ubuntu
+
+# By feature id
+devcontainer features test --skip-scenarios -p ./features -f <ids> -i ubuntu -u ubuntu
+devcontainer features test --skip-scenarios -p ./features -f tmux neovim -i ubuntu -u ubuntu
 ```
 
 ## neovim-basic Template
@@ -18,15 +21,16 @@ devcontainer templates apply --workspace-folder . \
 ```
 
 ### Connecting
-Connect (or re-connect) to the session.
+Source the connection command.
 ```bash
-devcontainer exec --workspace-folder . -- tmux new -A -D -s main
+source devcontainer_commands.sh
 ```
 
+Connect (or re-connect) to the session.
 ```bash
-dcx() { devcontainer exec --workspace-folder "${1:-.}" -- tmux new -A -D -s "${TMUX_SESSION:-main}"; }
+dca -t
 ```
 
 ### Detach from session
-If tmux is running on the host:     <C-b><C-b>d
-If tmux is running on the NOT host: <C-b>d
+If tmux is running nested on the host system:   <C-b><C-b>d
+If tmux is running on the NOT nested on host:   <C-b>d

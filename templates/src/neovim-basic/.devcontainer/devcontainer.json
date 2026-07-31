@@ -1,14 +1,27 @@
 {
-	"image": "ubuntu:${templateOption:imageVariant}",
+    "name": "Neovim Basic",
+    "build": {
+		"dockerfile": "Dockerfile"
+	},
 	"features": {
+        "ghcr.io/devcontainers/features/common-utils:2": {
+            "installZsh": "true",
+            "upgradePackages": "true"
+        },
+        "ghcr.io/devcontainers/features/git:1": {
+            "version": "latest",
+            "ppa": "false"
+        },
         "ghcr.io/essercodes/devcontainer/claudecode": {},
         "ghcr.io/essercodes/devcontainer/tmux": {},
+        "ghcr.io/essercodes/devcontainer/op": {},
         "ghcr.io/essercodes/devcontainer/neovim-config": {
             "configurl": "${templateOption:neovimConfigUrl}"
         }
     },
 	"remoteUser": "${templateOption:remoteUser}",
-    "initializeCommand": "op --account my.1password.com inject -i .devcontainer/env.tpl -o .devcontainer/.env --force",
-    "postStartCommand": "rm -f ${containerWorkspaceFolder}/.env.development",
-    "runArgs": ["--env-file", ".devcontainer/.env"]
+    "containerEnv": {
+        "CONTAINER_WORKSPACE_FOLDER": "${containerWorkspaceFolder}"
+    },
+    "onCreateCommand":  "echo \"source ${containerWorkspaceFolder}/.devcontainer/op_env.sh\" >> /home/${templateOption:remoteUser}/.bashrc"
 }

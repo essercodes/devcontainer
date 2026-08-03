@@ -1,6 +1,13 @@
 {
     "name": "Opencode",
     "id": "opencode",
-    "version": "0.1.5",
-    "description": "A feature to install Opencode"
+    "version": "0.1.6",
+    "description": "A feature to install Opencode",
+    "options": {
+        "username": {
+            "type": "string",
+            "default": "",
+            "description": "User to install with"
+        }
+    }
 }

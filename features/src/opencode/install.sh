@@ -7,6 +7,8 @@ if [ "$(id -u)" -ne 0 ]; then
   exit 1
 fi
 
+USERNAME=${USERNAME:-$_REMOTE_USER}
+
 pm_install() {
   pkgs="$1"
   echo "Installing:${pkgs}"
@@ -73,7 +75,7 @@ fi
 [ -z "$PKGS" ] || pm_install "$PKGS"
 
 as_user() {
-  sudo -u "$_REMOTE_USER" -H "$@"
+  sudo -u "$USERNAME" -H "$@"
 }
 
 as_user bash -c 'curl -fsSL https://opencode.ai/install | bash'

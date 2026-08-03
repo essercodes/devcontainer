@@ -7,14 +7,16 @@ if [ "$(id -u)" -ne 0 ]; then
     exit 1
 fi
 
+USERNAME=${USERNAME:-$_REMOTE_USER}
+
 if [ -n "${_REMOTE_USER_HOME}" ]; then
-    USER_HOME=$( getent passwd "${_REMOTE_USER}" | cut -d: -f6 )
+    USER_HOME=$( getent passwd "${USERNAME}" | cut -d: -f6 )
 else
     USER_HOME=${_REMOTE_USER_HOME}
 fi
 
 if [ ! -d "${USER_HOME}" ]; then
-    echo "ERROR: remoteUser (${_REMOTE_USER}) home directory (${USER_HOME}) does not exist." >&2
+    echo "ERROR: remoteUser (${USERNAME}) home directory (${USER_HOME}) does not exist." >&2
     exit 1
 fi
 
@@ -84,7 +86,7 @@ fi
 [ -z "$PKGS" ] || pm_install "$PKGS"
 
 as_user() {
-    sudo -u "$_REMOTE_USER" -H "$@"
+    sudo -u "$USERNAME" -H "$@"
 }
 
 as_user bash -c 'curl -fsSL https://claude.ai/install.sh | bash'

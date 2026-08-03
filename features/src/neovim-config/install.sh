@@ -103,6 +103,9 @@ fi
 echo "## Install tree-sitter CLI ##"
 cargo install --locked --root /usr/local tree-sitter-cli
 
+echo "## Install Telescope dependency"
+cargo install ripgrep
+
 as_user() {
     sudo -u "${_REMOTE_USER}" -H env "PATH=${PATH}" "$@"
 }

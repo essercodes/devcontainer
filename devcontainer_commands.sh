@@ -1,23 +1,26 @@
 dca() {
-    local workspace_folder="." 
-    local session_name="main" 
-    local include_token= 
+    local workspace_folder="."
+    local session_name="main"
+    local remote_user="max"
+    local include_token=
     local verbose=
     local OPTIND=1 OPTARG flag dir op_token
-    local -a dc new_env
+    local -a dc
 
     local usage='Usage: dca [options]   
     -t                     include or update 1Password service token
     -w <workspace_folder>  default: "."
     -s <session_name>      tmux session, default: "main"
+    -r <remote_user>       user to with op cred permissions
     -v                     verbose
     -h                     print this help'
 
-    while getopts 'ts:w:vh' flag; do
+    while getopts 'ts:w:r:vh' flag; do
         case "${flag}" in
             t) include_token=1 ;;
             s) session_name="${OPTARG}" ;;
             w) workspace_folder="${OPTARG}" ;;
+            r) remote_user="${OPTARG}" ;;
             v) verbose=1 ;;
             h) printf '%s\n' "$usage"; return 0 ;;
             *) printf '%s\n' "$usage" >&2; return 1 ;;
@@ -41,28 +44,18 @@ dca() {
         op_token=$(
             op --account my.1password.com service-account create \
                 "devcontainer-${dir}-$(date +%Y%m%d-%H%M%S)" \
-                --expires-in=1d \
+                --expires-in=3h \
                 --raw \
                 --vault Devcontainer:read_items,write_items
             ) || return 1
+
+        secret_file="/home/${remote_user}/op_secret"
+
+        "${dc[@]}" bash -c "touch ${secret_file} && \
+            echo ${op_token} > ${secret_file} && \
+            chown ${remote_user}:${remote_user} ${secret_file} && \
+            chmod 0600 ${secret_file}"
     fi
 
-    if "${dc[@]}" tmux has-session -t "${session_name}" 2>/dev/null; then
-        if [ -n "$verbose" ]; then echo "Session exists; connecting..."; fi
-
-        if [ -n "$include_token" ]; then
-            # only affects panes created afterward
-            "${dc[@]}" tmux set-environment -t "${session_name}" \
-                OP_SERVICE_ACCOUNT "${op_token}"
-        fi
-
-        "${dc[@]}" tmux attach -d -t "${session_name}"
-    else
-        if [ -n "$verbose" ]; then echo "Session does not exist; starting..."; fi
-
-        new_env=()
-        if [ -n "$include_token" ]; then new_env=(-e "OP_SERVICE_ACCOUNT=${op_token}"); fi
-
-        "${dc[@]}" tmux new "${new_env[@]}" -s "${session_name}"
-    fi
+    "${dc[@]}" tmux new -A -D -t "${session_name}"
 }

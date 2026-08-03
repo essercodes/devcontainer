@@ -12,7 +12,12 @@
             "version": "latest",
             "ppa": "false"
         },
-        "ghcr.io/essercodes/devcontainer/claudecode": {},
+        "ghcr.io/essercodes/devcontainer/claudecode": {
+            "username": "nonAdmin"
+        },
+        "ghcr.io/essercodes/devcontainer/opencode": {
+            "username": "nonAdmin"
+        },
         "ghcr.io/essercodes/devcontainer/tmux": {},
         "ghcr.io/essercodes/devcontainer/op": {},
         "ghcr.io/essercodes/devcontainer/neovim-config": {
@@ -21,7 +26,9 @@
     },
 	"remoteUser": "${templateOption:remoteUser}",
     "containerEnv": {
+        "REMOTE_USER": "${templateOption:remoteUser}",
         "CONTAINER_WORKSPACE_FOLDER": "${containerWorkspaceFolder}"
     },
+    "updateContentCommand": "chown -R :project ${containerWorkspaceFolder}",
     "onCreateCommand":  "echo \"source ${containerWorkspaceFolder}/.devcontainer/op_env.sh\" >> /home/${templateOption:remoteUser}/.bashrc"
 }

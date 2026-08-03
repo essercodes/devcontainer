@@ -1,12 +1,11 @@
 {
     "name": "Neovim Config",
     "id": "neovim-config",
-    "version": "0.1.5",
+    "version": "0.1.6",
     "dependsOn": {
         "ghcr.io/devcontainers/features/rust": {},
         "ghcr.io/devcontainers/features/python": {},
         "ghcr.io/devcontainers/features/node": {},
-        "ghcr.io/essercodes/devcontainer/opencode": {},
         "ghcr.io/essercodes/devcontainer/neovim": {}
     },
     "description": "A feature to install neovim configuration",

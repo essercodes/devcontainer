@@ -1,40 +1,48 @@
 #!/bin/bash
 
 env_keys() {
-  awk -F= '/=/ {
-    key = $1
-    gsub(/^[[:space:]]+|[[:space:]]+$/, "", key)
-    if (key != "" && key !~ /^#/)
-      printf "%s%s", (n++ ? "," : ""), key
-  }
-  END { print "" }' "$1"
+  local line key out=()
+  while IFS= read -r line || [[ -n $line ]]; do
+    [[ $line == *=* ]] || continue
+    key=${line%%=*}
+    key=$(echo "$key" | xargs)
+    [[ -n $key && $key != \#* ]] && out+=("$key")
+  done < "$1"
+  local IFS=,
+  printf '%s\n' "${out[*]}"
 }
 
 as_non_admin() {
-    local env_file;
-    local -a preserve;
+    local env_file=''
+    local -a preserve
     local OPTIND=1 OPTARG
-
-    local usage='Usage: as_non_admin -e <env_file>'
+    local usage='Usage: as_non_admin [-e <env_file>] <command> [args...]'
 
     while getopts ':e:h' flag; do
         case "${flag}" in
             e) env_file="${OPTARG}" ;;
             h) printf '%s\n' "$usage"; return 0 ;;
-            *) printf '%s\n' "$usage"; return 1 ;;
+            :) printf 'Missing argument for -%s\n%s\n' "$OPTARG" "$usage" >&2; return 1 ;;
+            *) printf 'Unknown option -%s\n%s\n' "$OPTARG" "$usage" >&2; return 1 ;;
         esac
     done
     shift $((OPTIND - 1))
 
-    preserve=()
-    if [[ -n "${env_file}" ]]; then  
-        preserve=("--preserve-env=$(env_keys "${env_file}")")
+    if (( $# == 0 )); then
+        printf '%s\n' "$usage" >&2
+        return 1
     fi
 
-    preserve=(sudo "${preserve[@]}" -u nonAdmin)
-    echo "${preserve[@]}"
+    preserve=()
+    if [[ -n "$env_file" ]]; then
+        local keys
+        keys="$(env_keys "$env_file")" || return 1
+        [[ -n "$keys" ]] && preserve+=("--preserve-env=${keys}")
+    fi
+
+    sudo "${preserve[@]}" -u nonAdmin -- env "PATH=$PATH" "$@"
 }
- 
+
 op_env_run() {
     local cmd="" env_file="" no_mask="" bin=""
     local OPTIND=1 OPTARG
@@ -59,7 +67,6 @@ op_env_run() {
     shift $((OPTIND - 1))
 
     if [[ -z "$cmd" ]]; then echo "cmd ($cmd) -c not set" >&2; return 1; fi
-    if [[ -z "$env_file" ]]; then echo "env_file ($env_file) -e not set" >&2; return 1; fi
 
     if [[ -z "$bin" ]]; then bin=${cmd}; fi
 
@@ -68,12 +75,20 @@ op_env_run() {
         masking="--no-masking"
     fi
 
-    secret_file="/home/${REMOTE_USER}/op_secret"
+    local secret_file="/home/${REMOTE_USER}/op_secret"
+
+    local envs=""
+    local op_prefix=""
+    if [[ -n ${env_file} ]]; then
+        op_prefix="OP_SERVICE_ACCOUNT=\$(cat ${secret_file@Q}) \
+            op --account my.1password.com run --env-file=${env_file@Q} ${masking} --"
+
+        envs="-e ${env_file}"
+    fi
+
     eval "
     ${cmd}() {
-        OP_SERVICE_ACCOUNT=\$(cat ${secret_file}) op --account my.1password.com run \
-            --env-file=${env_file@Q} ${masking} -- \
-            $(as_non_admin -e "${env_file}") ${bin} \"\$@\"
+        ${op_prefix} as_non_admin ${envs} ${bin} \"\$@\"
     }
     "
 }
@@ -92,5 +107,11 @@ op_env_run -m -c claude -e "$CLAUDE_ENV_FILE" \
     -b "/home/nonAdmin/.local/bin/claude"
 op_env_run -m -c opencode -e "$OPENCODE_ENV_FILE" \
     -b "/home/nonAdmin/.opencode/bin/opencode"
-
+op_env_run -c pnpm
+op_env_run -c npm
+op_env_run -c python
+op_env_run -c python3
+op_env_run -c pip 
+op_env_run -c pip3
+op_env_run -c cargo
 

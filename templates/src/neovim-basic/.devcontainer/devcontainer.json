@@ -29,6 +29,6 @@
         "REMOTE_USER": "${templateOption:remoteUser}",
         "CONTAINER_WORKSPACE_FOLDER": "${containerWorkspaceFolder}"
     },
-    "onCreateCommand":  "echo 'source $CONTAINER_WORKSPACE_FOLDER/.devcontainer/op_env.sh' >> /home/${templateOption:remoteUser}/.bashrc",
-    "updateContentCommand": "find $CONTAINER_WORKSPACE_FOLDER -path $CONTAINER_WORKSPACE_FOLDER/.git -prune -o -exec chown :project {} +"
+    "onCreateCommand":  "sudo bash $CONTAINER_WORKSPACE_FOLDER/.devcontainer/bin/onCreate.sh"],
+    "updateContentCommand": "sudo bash $CONTAINER_WORKSPACE_FOLDER/.devcontainer/bin/updateContent.sh"
 }

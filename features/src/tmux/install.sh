@@ -96,9 +96,15 @@ if ! grep -qF "$CONF_MARKER" "$TMUX_CONF" 2>/dev/null; then
     cat << EOF >> "$TMUX_CONF"
 $CONF_MARKER
 set -g mouse on
+
 set-window-option -g mode-keys vi
 bind-key -T copy-mode-vi v send -X begin-selection
 bind-key -T copy-mode-vi V send -X select-line
+
+bind-key -n M-h select-pane -L
+bind-key -n M-j select-pane -D
+bind-key -n M-k select-pane -U
+bind-key -n M-l select-pane -R
 EOF
     echo "Status bar disabled in ${TMUX_CONF}"
 fi

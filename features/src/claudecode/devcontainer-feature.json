@@ -1,8 +1,15 @@
 {
     "name": "Claude Code",
     "id": "claudecode",
-    "version": "0.1.5",
+    "version": "0.1.6",
     "description": "A feature to install Claude Code",
+    "options": {
+        "username": {
+            "type": "string",
+            "default": "",
+            "description": "User to install with"
+        }
+    },
     "installsAfter": [
         "ghcr.io/devcontainers/features/common-utils:2"
     ]

@@ -1,6 +1,6 @@
 {
     "name": "tmux",
     "id": "tmux",
-    "version": "0.1.6",
+    "version": "0.1.7",
     "description": "A feature to install tmux with the status bar disabled"
 }

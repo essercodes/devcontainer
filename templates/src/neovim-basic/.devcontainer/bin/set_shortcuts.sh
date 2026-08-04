@@ -6,6 +6,7 @@ EOF
 OPENCODE_ENV_FILE="${CONTAINER_WORKSPACE_FOLDER}/.devcontainer/opencode.env"
 cat <<EOF > "$OPENCODE_ENV_FILE"
 OPENROUTER_API_KEY = op://Devcontainer/OPENROUTER_API_KEY/credential
+OPENCODE_SERVER_PASSWORD = op://Devcontainer/OPENCODE_SERVER_PASSWORD/credential
 EOF
 
 shortcut_na() { eval "$(command shortcut_as_non_admin.sh "$@")"; }
@@ -25,4 +26,3 @@ shortcut_na -c cargo
 opencode_serve() {
     opencode serve --hostname localhost --port 4096
 }
-

@@ -32,5 +32,4 @@ dca -t
 ```
 
 ### Detach from session
-If tmux is running nested on the host system:   <C-b><C-b>d
-If tmux is running on the NOT nested on host:   <C-b>d
+If tmux is running nested on the host system:   <M-b>d

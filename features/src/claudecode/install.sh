@@ -16,7 +16,7 @@ else
 fi
 
 if [ ! -d "${USER_HOME}" ]; then
-    echo "ERROR: remoteUser (${USERNAME}) home directory (${USER_HOME}) does not exist." >&2
+    echo "ERROR: user (${USERNAME}) home directory (${USER_HOME}) does not exist." >&2
     exit 1
 fi
 
@@ -94,4 +94,3 @@ as_user bash -c 'curl -fsSL https://claude.ai/install.sh | bash'
 as_user cat > "${USER_HOME}/.claude.json" <<'EOF'
 {"hasCompletedOnboarding": true, "theme": "dark"}
 EOF
-

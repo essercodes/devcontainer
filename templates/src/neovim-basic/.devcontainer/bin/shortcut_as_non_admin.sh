@@ -4,13 +4,16 @@ set -euo pipefail
 
 usage() {
     cat <<'EOF'
-Usage: op_env_run -c <cmd> [-b <bin>] [-e <env_file>] [-m]
+Usage: op_env_run -c <cmd> [-b <bin>] [-e <env_file>] [-m] [-- <args>...]
 
   -c <cmd>       name of the shell function to define
   -b <bin>       binary to run; defaults to <cmd>
   -e <env_file>  op env file to inject, and whose keys survive sudo
   -m             pass --no-masking to op run
   -h             show this help
+
+  Anything after -- is baked into the generated function as fixed
+  arguments, placed before the caller's own "$@".
 EOF
 }
 
@@ -33,6 +36,8 @@ main() {
             *) end "unknown option -$OPTARG"; usage >&2; return 1 ;;
         esac
     done
+    # getopts consumes a lone -- and stops; OPTIND now points at the
+    # first passthrough arg.
     shift $((OPTIND - 1))
 
     if [[ -z $cmd ]]; then
@@ -59,9 +64,14 @@ main() {
         envs="-e ${env_file}"
     fi
 
+    # Fixed args from after --, frozen into the definition at generation
+    # time. The guard keeps ${*@Q} from tripping set -u when $# is 0.
+    local extra=""
+    (($#)) && extra=" ${*@Q}"
+
     printf '%s\n' "
     ${cmd}() {
-        ${op_prefix} as_non_admin.sh ${envs} ${bin@Q} \"\$@\"
+        ${op_prefix} as_non_admin.sh ${envs} ${bin@Q}${extra} \"\$@\"
     }
     "
 }

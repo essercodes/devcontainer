@@ -15,6 +15,7 @@ shortcut_na -m -c claude -e "$CLAUDE_ENV_FILE" \
     -b "/home/nonAdmin/.local/bin/claude"
 shortcut_na -m -c opencode -e "$OPENCODE_ENV_FILE" \
     -b "/home/nonAdmin/.opencode/bin/opencode"
+
 shortcut_na -c pnpm
 shortcut_na -c npm
 shortcut_na -c python
@@ -22,10 +23,6 @@ shortcut_na -c python3
 shortcut_na -c pip 
 shortcut_na -c pip3
 shortcut_na -c cargo
-
-opencode_serve() {
-    opencode serve --hostname localhost --port 4096
-}
 
 nvim() {
     local token;

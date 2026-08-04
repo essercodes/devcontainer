@@ -26,3 +26,12 @@ shortcut_na -c cargo
 opencode_serve() {
     opencode serve --hostname localhost --port 4096
 }
+
+nvim() {
+    local token;
+    token="$(OP_SERVICE_ACCOUNT_TOKEN=$(cat ~/op_secret) \
+        op --account my.1password.com \
+        read op://Devcontainer/OPENCODE_SERVER_PASSWORD/credential)"
+
+    OPENCODE_SERVER_PASSWORD="$token" command nvim "$@"
+}

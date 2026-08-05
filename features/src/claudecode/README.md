@@ -11,7 +11,11 @@ A feature to install Claude Code
 }
 ```
 
+## Options
 
+| Options Id | Description | Type | Default Value |
+|-----|-----|-----|-----|
+| username | User to install with | string | - |
 
 
 

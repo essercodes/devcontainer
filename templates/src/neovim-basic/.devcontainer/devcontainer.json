@@ -29,6 +29,7 @@
         "REMOTE_USER": "${templateOption:remoteUser}",
         "CONTAINER_WORKSPACE_FOLDER": "${containerWorkspaceFolder}"
     },
+    "appPort": ["5173:5173"],
     "onCreateCommand":  "sudo bash $CONTAINER_WORKSPACE_FOLDER/.devcontainer/bin/onCreate.sh"],
     "updateContentCommand": "sudo bash $CONTAINER_WORKSPACE_FOLDER/.devcontainer/bin/updateContent.sh"
 }

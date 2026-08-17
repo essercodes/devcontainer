@@ -44,7 +44,7 @@ dca() {
         op_token=$(
             op --account my.1password.com service-account create \
                 "devcontainer-${dir}-$(date +%Y%m%d-%H%M%S)" \
-                --expires-in=3h \
+                --expires-in=12w \
                 --raw \
                 --vault Devcontainer:read_items,write_items
             ) || return 1

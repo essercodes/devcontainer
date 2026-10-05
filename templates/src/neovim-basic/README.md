@@ -7,8 +7,8 @@ Template for Basic Dev Environment with Neovim installed
 
 | Options Id | Description | Type | Default Value |
 |-----|-----|-----|-----|
-| imageVariant | Ubuntu version (use latest): | string | latest |
-| remoteUser | The devcontainer remote user | string | ubuntu |
+| imageVariant | Ubuntu container version tag | string | latest |
+| remoteUser | The devcontainer remote user | string | max |
 | neovimConfigUrl | git repo url for neovim config | string | https://github.com/essercodes/neovim-config |
 
 

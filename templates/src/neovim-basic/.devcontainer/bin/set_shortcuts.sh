@@ -6,14 +6,14 @@ EOF
 OPENCODE_ENV_FILE="/home/${REMOTE_USER}/opencode.env"
 cat <<EOF > "$OPENCODE_ENV_FILE"
 OPENROUTER_API_KEY = op://Devcontainer/OPENROUTER_API_KEY/credential
-OPENCODE_SERVER_PASSWORD = op://Devcontainer/OPENCODE_SERVER_PASSWORD/credential
 EOF
 
 shortcut_na() { eval "$(command shortcut_as_non_admin.sh "$@")"; }
 
 shortcut_na -m -c claude -e "$CLAUDE_ENV_FILE" \
     -b "/home/nonAdmin/.local/bin/claude"
-shortcut_na -m -c opencode -e "$OPENCODE_ENV_FILE" \
+# nvim generates OPENCODE_SERVER_PASSWORD per session; keep it across sudo
+shortcut_na -m -c opencode -e "$OPENCODE_ENV_FILE" -p OPENCODE_SERVER_PASSWORD \
     -b "/home/nonAdmin/.opencode/bin/opencode"
 
 shortcut_na -c pnpm
@@ -23,12 +23,3 @@ shortcut_na -c python3
 shortcut_na -c pip 
 shortcut_na -c pip3
 shortcut_na -c cargo
-
-nvim() {
-    local token;
-    token="$(OP_SERVICE_ACCOUNT_TOKEN=$(cat ~/op_secret) \
-        op --account my.1password.com \
-        read op://Devcontainer/OPENCODE_SERVER_PASSWORD/credential)"
-
-    OPENCODE_SERVER_PASSWORD="$token" command nvim "$@"
-}

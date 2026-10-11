@@ -4,11 +4,12 @@ set -euo pipefail
 
 usage() {
     cat <<'EOF'
-Usage: op_env_run -c <cmd> [-b <bin>] [-e <env_file>] [-m] [-- <args>...]
+Usage: op_env_run -c <cmd> [-b <bin>] [-e <env_file>] [-p <VAR,VAR,...>] [-m] [-- <args>...]
 
   -c <cmd>       name of the shell function to define
   -b <bin>       binary to run; defaults to <cmd>
   -e <env_file>  op env file to inject, and whose keys survive sudo
+  -p <vars>      comma-separated variable names to also preserve across sudo
   -m             pass --no-masking to op run
   -h             show this help
 
@@ -22,15 +23,16 @@ end() {
 }
 
 main() {
-    local cmd="" env_file="" no_mask="" bin="" flag
+    local cmd="" env_file="" no_mask="" bin="" preserve="" flag
     local OPTIND=1 OPTARG
 
-    while getopts ':mc:b:e:h' flag; do
+    while getopts ':mc:b:e:p:h' flag; do
         case $flag in
             m) no_mask=1 ;;
             c) cmd="${OPTARG}" ;;
             b) bin="${OPTARG}" ;;
             e) env_file="${OPTARG}" ;;
+            p) preserve="${OPTARG}" ;;
             h) usage >&2; return 0 ;;
             :) end "missing argument for -$OPTARG"; usage >&2; return 1 ;;
             *) end "unknown option -$OPTARG"; usage >&2; return 1 ;;
@@ -58,10 +60,14 @@ main() {
     local envs=""
     local op_prefix=""
     if [[ -n ${env_file} ]]; then
-        op_prefix="OP_SERVICE_ACCOUNT=\$(cat ${secret_file@Q}) \
+        op_prefix="OP_SERVICE_ACCOUNT_TOKEN=\$(cat ${secret_file@Q}) \
             op --account my.1password.com run --env-file=${env_file@Q} ${masking} --"
 
         envs="-e ${env_file}"
+    fi
+
+    if [[ -n ${preserve} ]]; then
+        envs="${envs:+${envs} }-p ${preserve@Q}"
     fi
 
     # Fixed args from after --, frozen into the definition at generation

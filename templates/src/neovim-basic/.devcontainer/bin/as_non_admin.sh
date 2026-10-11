@@ -6,11 +6,13 @@ TARGET_USER=${AS_NON_ADMIN_USER:-nonAdmin}
 
 usage() {
     cat <<'EOF'
-Usage: as_non_admin [-e <env_file>] [-u <user>] <command> [args...]
+Usage: as_non_admin [-e <env_file>] [-p <VAR,VAR,...>] <command> [args...]
 
   -e <env_file>  preserve every variable named in <env_file> across sudo
-  -u <user>      run as <user> (default: nonAdmin, or $AS_NON_ADMIN_USER)
+  -p <vars>      comma-separated variable names to also preserve across sudo
   -h             show this help
+
+  Runs as nonAdmin, or $AS_NON_ADMIN_USER if set.
 EOF
 }
 
@@ -32,14 +34,15 @@ env_keys() {
 }
 
 main() {
-    local env_file=''
+    local env_file='' extra_vars=''
     local -a preserve
     local OPTIND=1 OPTARG
 
-    while getopts ':e:h' flag; do
+    while getopts ':e:p:h' flag; do
         case "${flag}" in
             e) env_file="${OPTARG}" ;;
-            h) printf '%s\n' "$usage"; return 0 ;;
+            p) extra_vars="${OPTARG}" ;;
+            h) usage; return 0 ;;
             :) usage >&2; die "missing argument for -$OPTARG" ;;
             *) usage >&2; die "unknown option -$OPTARG" ;;
         esac
@@ -47,7 +50,7 @@ main() {
     shift $((OPTIND - 1))
 
     if (( $# == 0 )); then
-        printf '%s\n' "$usage" >&2
+        usage >&2
         return 1
     fi
 
@@ -57,6 +60,7 @@ main() {
         keys="$(env_keys "$env_file")" || return 1
         [[ -n "$keys" ]] && preserve+=("--preserve-env=${keys}")
     fi
+    [[ -n "$extra_vars" ]] && preserve+=("--preserve-env=${extra_vars}")
 
     exec sudo -H "${preserve[@]}" -u "${TARGET_USER}" -- env "PATH=$PATH" "$@"
 }

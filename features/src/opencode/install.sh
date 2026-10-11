@@ -89,7 +89,7 @@ as_user() {
     sudo -u "$USERNAME" -H "$@"
 }
 
-as_user bash -c 'curl -fsSL https://opencode.ai/install | bash'
+as_user bash -c 'curl -fsSL https://opencode.ai/v2/install | bash'
 
 CONFIG_DIR="${USER_HOME}/.config/opencode"
 as_user mkdir -p "${CONFIG_DIR}"

@@ -19,9 +19,11 @@ EOF
 }
 
 end() {
-    printf 'shortcut_as_non_admin: %s\n' "$1" >&2
+    printf 'op_env_run: %s\n' "$1" >&2
 }
 
+# TODO: Add option to run with 1password token, but without running as nonAdmin
+# user.
 main() {
     local cmd="" env_file="" no_mask="" bin="" preserve="" flag
     local OPTIND=1 OPTARG

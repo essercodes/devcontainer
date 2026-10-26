@@ -27,7 +27,8 @@
 	"remoteUser": "${templateOption:remoteUser}",
     "containerEnv": {
         "REMOTE_USER": "${templateOption:remoteUser}",
-        "CONTAINER_WORKSPACE_FOLDER": "${containerWorkspaceFolder}"
+        "CONTAINER_WORKSPACE_FOLDER": "${containerWorkspaceFolder}",
+        "GLOBAL_GIT_IGNORE_URL": "https://raw.githubusercontent.com/essercodes/dotfiles/refs/heads/main/global-gitignore"
     },
     "appPort": ["5173:5173"],
     "onCreateCommand":  "sudo bash $CONTAINER_WORKSPACE_FOLDER/.devcontainer/bin/onCreate.sh",

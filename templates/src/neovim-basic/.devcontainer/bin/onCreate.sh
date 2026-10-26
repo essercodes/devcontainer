@@ -16,3 +16,8 @@ chown root:root "$BIN_DIR/claude_ide.sh"
 chmod 0555 "$BIN_DIR/as_non_admin.sh"
 chmod 0555 "$BIN_DIR/op_env_run.sh"
 chmod 0555 "$BIN_DIR/claude_ide.sh"
+
+global_git_ignore_url=${GLOBAL_GIT_IGNORE_URL:-"https://raw.githubusercontent.com/essercodes/dotfiles/refs/heads/main/global-gitignore"}
+global_git_ignore_path="/home/$REMOTE_USER/.global-gitignore" 
+sudo -u "$REMOTE_USER" -- curl -o "$global_git_ignore_path" "$global_git_ignore_url"
+sudo -u "$REMOTE_USER" -- git config --global core.excludesfile "$global_git_ignore_path"

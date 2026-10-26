@@ -21,3 +21,6 @@ global_git_ignore_url=${GLOBAL_GIT_IGNORE_URL:-"https://raw.githubusercontent.co
 global_git_ignore_path="/home/$REMOTE_USER/.global-gitignore" 
 sudo -u "$REMOTE_USER" -- curl -o "$global_git_ignore_path" "$global_git_ignore_url"
 sudo -u "$REMOTE_USER" -- git config --global core.excludesfile "$global_git_ignore_path"
+
+sudo -u "$REMOTE_USER" -- git config --global --add safe.directory "$CONTAINER_WORKSPACE_FOLDER"
+

@@ -24,6 +24,8 @@ EOF
 
 persistent-op_env_run -m -c npm -e "$NPM_ENV_FILE"
 persistent-op_env_run -m -c pnpm -e "$NPM_ENV_FILE"
+persistent-op_env_run -m -c npx -e "$NPM_ENV_FILE"
+persistent-op_env_run -m -c pnpx -e "$NPM_ENV_FILE"
 
 AWS_ENV_FILE="/home/${REMOTE_USER}/aws.env"
 cat <<EOF > "$AWS_ENV_FILE"

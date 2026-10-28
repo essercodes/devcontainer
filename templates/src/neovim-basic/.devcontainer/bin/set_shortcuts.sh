@@ -25,8 +25,16 @@ EOF
 persistent-op_env_run -m -c npm -e "$NPM_ENV_FILE"
 persistent-op_env_run -m -c pnpm -e "$NPM_ENV_FILE"
 
-persistent-op_env_run -c pnpm
-persistent-op_env_run -c npm
+AWS_ENV_FILE="/home/${REMOTE_USER}/aws.env"
+cat <<EOF > "$AWS_ENV_FILE"
+AWS_ACCESS_KEY_ID = "op://Devcontainer/AWS Access Key/access key id"
+AWS_SECRET_ACCESS_KEY = "op://Devcontainer/AWS Access Key/secret access key"
+AWS_REGION = "op://Devcontainer/AWS Access Key/region"
+EOF
+
+persistent-op_env_run -m -c aws -e "$AWS_ENV_FILE"
+persistent-op_env_run -m -c terraform -e "$AWS_ENV_FILE"
+
 persistent-op_env_run -c python
 persistent-op_env_run -c python3
 persistent-op_env_run -c pip 
